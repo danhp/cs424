@@ -6,7 +6,8 @@ import hus.HusMove;
 import java.util.ArrayList;
 
 public class MyTools {
-    private static final int DEPTH = 6;
+    private static final int DEPTH = 5;
+    private static int maximizer;
 
     public static HusMove getOpener(HusBoardState gameState, int player_id, int oppnonent_id) {
         // Get the legal moves for the current board state.
@@ -26,11 +27,12 @@ public class MyTools {
     }
 
     public static HusMove getBestMove(HusBoardState gameState, int player_id) {
-        return getBestMoveAlphaBeta(gameState, player_id);
+        maximizer = player_id;
+        return getBestMoveAlphaBeta(gameState);
     }
 
     // Assumes will only be called when the game is not over
-    public static HusMove getBestMoveAlphaBeta(HusBoardState gameState, int player_id) {
+    public static HusMove getBestMoveAlphaBeta(HusBoardState gameState) {
         // Get the legal moves for the current game state
         ArrayList<HusMove> moveList = gameState.getLegalMoves();
 
@@ -44,7 +46,7 @@ public class MyTools {
             HusBoardState cloned_gameState = (HusBoardState) gameState.clone();
             cloned_gameState.move(m);
 
-            int outcome = alphaBeta(cloned_gameState, DEPTH, alpha, beta, false, player_id);
+            int outcome = alphaBeta(cloned_gameState, DEPTH, alpha, beta, false);
 
             if (outcome > alpha) {
                 alpha = outcome;
@@ -55,10 +57,10 @@ public class MyTools {
         return bestMove;
     }
 
-    private static int alphaBeta(HusBoardState gameState, int depth, int alpha, int beta, boolean isMaximize, int player_id) {
+    private static int alphaBeta(HusBoardState gameState, int depth, int alpha, int beta, boolean isMaximize) {
         // Termination check
         if (depth == 0 || gameState.gameOver()) {
-            return score(gameState, player_id);
+            return score(gameState);
         }
 
         // Get the legal moves for the current board state.
@@ -74,7 +76,7 @@ public class MyTools {
                 HusBoardState cloned_gameState = (HusBoardState) gameState.clone();
                 cloned_gameState.move(m);
 
-                value = Math.max(value, alphaBeta(cloned_gameState, depth - 1, alpha, beta, !isMaximize, player_id));
+                value = Math.max(value, alphaBeta(cloned_gameState, depth - 1, alpha, beta, !isMaximize));
                 alpha = Math.max(alpha, value);
 
                 // Prune
@@ -90,7 +92,7 @@ public class MyTools {
                 HusBoardState cloned_gameState = (HusBoardState) gameState.clone();
                 cloned_gameState.move(m);
 
-                value = Math.min(value, alphaBeta(cloned_gameState, depth - 1, alpha, beta, !isMaximize, player_id));
+                value = Math.min(value, alphaBeta(cloned_gameState, depth - 1, alpha, beta, !isMaximize));
                 beta = Math.min(beta, value);
 
                 // Prune
@@ -101,20 +103,25 @@ public class MyTools {
         return value;
     }
 
-    private static int score(HusBoardState gameState, int player_id) {
+    public static HusMove getBestMoveMCTS(HusBoardState gameState) {
+
+        return new HusMove(0, 0);
+    }
+
+    private static int score(HusBoardState gameState) {
 
         // Draws happen so rarely that we group them with losses.
         if (gameState.gameOver()) {
             int winner = gameState.getWinner();
 
-            if (winner == player_id) {
+            if (winner == maximizer) {
                 return Integer.MAX_VALUE;
             } else {
                 return Integer.MIN_VALUE;
             }
         }
 
-        int[] my_pits = gameState.getPits()[player_id];
+        int[] my_pits = gameState.getPits()[maximizer];
 
         int sum = 0;
         for (int i : my_pits) {
