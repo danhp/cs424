@@ -6,7 +6,7 @@ import hus.HusMove;
 import java.util.ArrayList;
 
 public class AlphaBeta {
-    private static final int DEPTH = 5;
+    private static final int DEPTH = 6;
     private static int maximizer;
 
     // Assumes will only be called when the game is not over

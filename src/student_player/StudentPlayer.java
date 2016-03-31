@@ -20,24 +20,6 @@ public class StudentPlayer extends HusPlayer {
      * which your agent can use to make decisions. See the class hus.RandomHusPlayer
      * for another example agent. */
     public HusMove chooseMove(HusBoardState gameState) {
-        HusMove move;
-
-        /* Opening move behaviour */
-        if (gameState.getTurnNumber() == 0) {
-            if (player_id == gameState.firstPlayer()) {
-                // Randomized opening from a set of moves.
-                move = MyTools.getOpener(gameState, player_id, opponent_id);
-
-            } else {
-                // Play the best counter.
-                move = MyTools.getCounter(gameState, player_id, opponent_id);
-            }
-
-        } else {
-            // Normal in-game behaviour
-            move = MyTools.getBestMove(gameState, player_id);
-        }
-
-        return move;
+        return MyTools.getBestMove(gameState, player_id);
     }
 }

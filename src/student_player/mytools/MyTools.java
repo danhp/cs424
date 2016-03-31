@@ -16,7 +16,6 @@ public class MyTools {
 
     // Try to determine the opener with the given state.
     public static HusMove getCounter(HusBoardState gameState, int player_id, int opponent_id) {
-
         // Get the legal moves for the current board state.
         ArrayList<HusMove> moves = gameState.getLegalMoves();
         HusMove move = moves.get(0);
@@ -25,11 +24,7 @@ public class MyTools {
     }
 
     public static HusMove getBestMove(HusBoardState gameState, int player_id) {
-        return AlphaBeta.getBestMoveAlphaBeta(gameState, player_id);
+        return MCTS.getBestMoveMCTS(gameState, player_id);
+//        return AlphaBeta.getBestMoveAlphaBeta(gameState, player_id);
     }
-
-    public static HusMove getBestMoveMCTS(HusBoardState gameState) {
-        return new HusMove(0, 0);
-    }
-
 }
