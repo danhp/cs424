@@ -17,7 +17,7 @@ public class MCTS {
 
         root = new Node(gameState, Integer.MIN_VALUE, null, null);
 
-        long timeRemaining = 1800000000;
+        long timeRemaining = 1850000000;
         long delta = 20;
 
         while (delta * 4 < timeRemaining) {
@@ -48,10 +48,9 @@ public class MCTS {
     }
 
     private static Node expand(Node node) {
-        // Get the best untried move
-        int r = rand.nextInt(node.untriedMoves.size());
-        HusMove move = node.untriedMoves.get(r);
-        node.untriedMoves.remove(r);
+        // Get the random untried move
+        HusMove move = node.untriedMoves.get(0);
+        node.untriedMoves.remove(0);
 
         // Create the new child state
         HusBoardState newState = (HusBoardState) node.gameState.clone();
@@ -84,7 +83,6 @@ public class MCTS {
     private static int defaultPolicy(HusBoardState gameState) {
         HusBoardState state = (HusBoardState) gameState.clone();
 
-        // TODO: Run with a depth 2 Alpha-beta.
         // Continuously get a random move until gameOver.
         while (!state.gameOver()) {
             ArrayList<HusMove> moves = state.getLegalMoves();

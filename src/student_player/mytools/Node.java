@@ -4,6 +4,7 @@ import hus.HusBoardState;
 import hus.HusMove;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Node {
@@ -34,5 +35,6 @@ public class Node {
 
         this.children = new ArrayList<Node>();
         this.untriedMoves = state.getLegalMoves();
+        Collections.shuffle(this.untriedMoves);
     }
 }
