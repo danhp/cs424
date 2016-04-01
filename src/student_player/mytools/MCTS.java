@@ -84,13 +84,15 @@ public class MCTS {
         HusBoardState state = (HusBoardState) gameState.clone();
 
         // Continuously get a random move until gameOver.
-        while (!state.gameOver()) {
-            ArrayList<HusMove> moves = state.getLegalMoves();
-            HusMove move = moves.get(rand.nextInt(moves.size()));
-            state.move(move);
-        }
+//        while (!state.gameOver()) {
+//            ArrayList<HusMove> moves = state.getLegalMoves();
+//            HusMove move = moves.get(rand.nextInt(moves.size()));
+//            state.move(move);
+//        }
+//        return (state.getWinner() == maximizer) ? 1 : 0;
 
-        return (state.getWinner() == maximizer) ? 1 : 0;
+        // Use a 2 play alpha beta
+        return AlphaBeta.alphaBeta(gameState, 2, Integer.MIN_VALUE, Integer.MAX_VALUE, gameState.getTurnPlayer() == maximizer);
     }
 
     private static void backup(Node node, int delta) {

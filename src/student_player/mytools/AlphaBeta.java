@@ -38,7 +38,7 @@ public class AlphaBeta {
         return bestMove;
     }
 
-    private static int alphaBeta(HusBoardState gameState, int depth, int alpha, int beta, boolean isMaximize) {
+    public static int alphaBeta(HusBoardState gameState, int depth, int alpha, int beta, boolean isMaximize) {
         // Termination check
         if (depth == 0 || gameState.gameOver()) {
             return score(gameState);
