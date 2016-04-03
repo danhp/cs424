@@ -4,18 +4,19 @@ import hus.HusBoardState;
 import hus.HusMove;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class AlphaBeta {
-    private static final int DEPTH = 6;
     private static int maximizer;
 
     // Assumes will only be called when the game is not over
-    public static HusMove getBestMoveAlphaBeta(HusBoardState gameState, int player_id) {
+    public static HusMove getBestMoveAlphaBeta(final HusBoardState gameState, int player_id, int depth) {
         // Set the player we want the move fore
         maximizer = player_id;
 
         // Get the legal moves for the current game state
-        ArrayList<HusMove> moveList = gameState.getLegalMoves();
+        List<HusMove> moveList = gameState.getLegalMoves();
+        moveList = MyTools.sortMoves(moveList, gameState, maximizer);
 
         HusMove bestMove = moveList.get(0);
         int alpha = Integer.MIN_VALUE;
@@ -27,7 +28,7 @@ public class AlphaBeta {
             HusBoardState cloned_gameState = (HusBoardState) gameState.clone();
             cloned_gameState.move(m);
 
-            int outcome = alphaBeta(cloned_gameState, DEPTH, alpha, beta, false);
+            int outcome = alphaBeta(cloned_gameState, depth, alpha, beta, false);
 
             if (outcome > alpha) {
                 alpha = outcome;
@@ -97,13 +98,6 @@ public class AlphaBeta {
             }
         }
 
-        int[] my_pits = gameState.getPits()[maximizer];
-
-        int sum = 0;
-        for (int i : my_pits) {
-            sum += my_pits[i];
-        }
-
-        return sum;
+        return MyTools.countSeeds(gameState, maximizer);
     }
 }

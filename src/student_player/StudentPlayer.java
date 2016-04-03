@@ -4,6 +4,8 @@ import hus.HusBoardState;
 import hus.HusPlayer;
 import hus.HusMove;
 
+import student_player.mytools.AlphaBeta;
+import student_player.mytools.MCTS;
 import student_player.mytools.MyTools;
 
 /** A Hus player submitted by a student. */
@@ -20,6 +22,6 @@ public class StudentPlayer extends HusPlayer {
      * which your agent can use to make decisions. See the class hus.RandomHusPlayer
      * for another example agent. */
     public HusMove chooseMove(HusBoardState gameState) {
-        return MyTools.getBestMove(gameState, player_id);
+        return MCTS.getBestMoveMCTS(gameState, player_id);
     }
 }

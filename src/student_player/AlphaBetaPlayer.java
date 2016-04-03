@@ -21,6 +21,6 @@ public class AlphaBetaPlayer extends HusPlayer {
      * which your agent can use to make decisions. See the class hus.RandomHusPlayer
      * for another example agent. */
     public HusMove chooseMove(HusBoardState gameState) {
-        return AlphaBeta.getBestMoveAlphaBeta(gameState, player_id);
+        return AlphaBeta.getBestMoveAlphaBeta(gameState, player_id, 6);
     }
 }

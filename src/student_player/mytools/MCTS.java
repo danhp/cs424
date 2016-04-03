@@ -1,10 +1,9 @@
 package student_player.mytools;
 
-import hus.HusBoard;
 import hus.HusBoardState;
 import hus.HusMove;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class MCTS {
@@ -36,7 +35,12 @@ public class MCTS {
     }
 
     private static Node treePolicy(Node node) {
-        while (!node.gameState.gameOver()) {
+        // Start the root
+        if (node.children.size() == 0) {
+            return expand(node);
+        }
+
+        while (node.children.size() > 0) {
             if (node.children.size() < node.gameState.getLegalMoves().size()) {
                 return expand(node);
             } else {
@@ -48,7 +52,7 @@ public class MCTS {
     }
 
     private static Node expand(Node node) {
-        // Get the random untried move
+        // Get a random untried move
         HusMove move = node.untriedMoves.get(0);
         node.untriedMoves.remove(0);
 
@@ -83,16 +87,31 @@ public class MCTS {
     private static int defaultPolicy(HusBoardState gameState) {
         HusBoardState state = (HusBoardState) gameState.clone();
 
-        // Continuously get a random move until gameOver.
-//        while (!state.gameOver()) {
+        // Random until GameOver
+        while (!state.gameOver()) {
+            List<HusMove> moves = state.getLegalMoves();
+            HusMove move = moves.get(rand.nextInt(moves.size()));
+            state.move(move);
+        }
+        return (state.getWinner() == maximizer) ? 1 : 0;
+
+        // Random with a depth limit
+//        final int DEPTH = 20;
+//        int initSeed = MyTools.countSeeds(gameState, maximizer);
+//        for (int i = 0; !state.gameOver() && i < DEPTH; i++) {
 //            ArrayList<HusMove> moves = state.getLegalMoves();
 //            HusMove move = moves.get(rand.nextInt(moves.size()));
 //            state.move(move);
 //        }
-//        return (state.getWinner() == maximizer) ? 1 : 0;
+//
+//        int finalSeed = MyTools.countSeeds(state, maximizer);
+//        return (finalSeed >= initSeed) ? 1 : 0;
 
-        // Use a 2 play alpha beta
-        return AlphaBeta.alphaBeta(gameState, 2, Integer.MIN_VALUE, Integer.MAX_VALUE, gameState.getTurnPlayer() == maximizer);
+
+        // 2-ply alpha beta
+//        int initSeed = MyTools.countSeeds(gameState, maximizer);
+//        int finalSeed = AlphaBeta.alphaBeta(gameState, 2, Integer.MIN_VALUE, Integer.MAX_VALUE, gameState.getTurnPlayer() == maximizer);
+//        return (finalSeed > initSeed) ? 1 : 0;
     }
 
     private static void backup(Node node, int delta) {
