@@ -3,6 +3,8 @@ package student_player.mytools;
 import hus.HusBoardState;
 import hus.HusMove;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -16,8 +18,11 @@ public class MCTS {
 
         root = new Node(gameState, Integer.MIN_VALUE, null, null);
 
-        long timeRemaining = 1850000000;
+        double timeRemaining = 1.9e9;
         long delta = 20;
+
+        // Start the root so that there is at least one child
+        expand(root);
 
         while (delta * 4 < timeRemaining) {
             long startTime = System.nanoTime();
@@ -35,11 +40,6 @@ public class MCTS {
     }
 
     private static Node treePolicy(Node node) {
-        // Start the root
-        if (node.children.size() == 0) {
-            return expand(node);
-        }
-
         while (node.children.size() > 0) {
             if (node.children.size() < node.gameState.getLegalMoves().size()) {
                 return expand(node);
@@ -52,7 +52,7 @@ public class MCTS {
     }
 
     private static Node expand(Node node) {
-        // Get a random untried move
+        // Get a untried move
         HusMove move = node.untriedMoves.get(0);
         node.untriedMoves.remove(0);
 
@@ -61,7 +61,7 @@ public class MCTS {
         newState.move(move);
 
         // Create the node and add it to the tree
-        Node newNode = new Node(newState, Integer.MIN_VALUE, node, move);
+        Node newNode = new Node(newState, 0, node, move);
         node.children.add(newNode);
 
         return newNode;
@@ -96,10 +96,10 @@ public class MCTS {
         return (state.getWinner() == maximizer) ? 1 : 0;
 
         // Random with a depth limit
-//        final int DEPTH = 20;
+//        final int DEPTH = 30;
 //        int initSeed = MyTools.countSeeds(gameState, maximizer);
 //        for (int i = 0; !state.gameOver() && i < DEPTH; i++) {
-//            ArrayList<HusMove> moves = state.getLegalMoves();
+//            List<HusMove> moves = state.getLegalMoves();
 //            HusMove move = moves.get(rand.nextInt(moves.size()));
 //            state.move(move);
 //        }

@@ -41,6 +41,7 @@ public class MyTools {
         return sum;
     }
 
+    // Sorted with largest element first.
     public static List<HusMove> sortMoves(List<HusMove> moveList, final HusBoardState gameState, final int player_id) {
         Collections.sort(moveList, new Comparator<HusMove>() {
             @Override
@@ -53,7 +54,7 @@ public class MyTools {
                 s2.move(m2);
                 int score2 = countSeeds(s2, player_id);
 
-                return (score1 < score2) ? -1 : (score1 == score2 ) ? 0 : 1;
+                return (score1 < score2) ? 1 : (score1 == score2 ) ? 0 : -1;
             }
         });
 

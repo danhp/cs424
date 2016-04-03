@@ -35,7 +35,5 @@ public class Node {
 
         this.children = new ArrayList<Node>();
         this.untriedMoves = state.getLegalMoves();
-        Collections.shuffle(this.untriedMoves);
-//        this.untriedMoves = MyTools.sortMoves(this.untriedMoves, state, state.getTurnPlayer());
     }
 }
