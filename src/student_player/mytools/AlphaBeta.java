@@ -10,7 +10,7 @@ public class AlphaBeta {
     private static int maximizer;
 
     // Assumes will only be called when the game is not over
-    public static HusMove getBestMoveAlphaBeta(final HusBoardState gameState, int player_id, int depth) {
+    public static HusMove getBestMove(final HusBoardState gameState, int player_id, int depth) {
         // Set the player we want the move fore
         maximizer = player_id;
 

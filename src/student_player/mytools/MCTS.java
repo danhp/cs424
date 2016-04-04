@@ -3,8 +3,6 @@ package student_player.mytools;
 import hus.HusBoardState;
 import hus.HusMove;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 
@@ -13,10 +11,10 @@ public class MCTS {
     private static int maximizer;
     private static Node root;
 
-    public static HusMove getBestMoveMCTS(HusBoardState gameState, int player_id) {
+    public static HusMove getBestMove(HusBoardState gameState, int player_id) {
         maximizer = player_id;
 
-        root = new Node(gameState, Integer.MIN_VALUE, null, null);
+        root = new Node(gameState, null, null);
 
         double timeRemaining = 1.9e9;
         long delta = 20;
@@ -52,7 +50,7 @@ public class MCTS {
     }
 
     private static Node expand(Node node) {
-        // Get a untried move
+        // Get an untried move.
         HusMove move = node.untriedMoves.get(0);
         node.untriedMoves.remove(0);
 
@@ -61,7 +59,7 @@ public class MCTS {
         newState.move(move);
 
         // Create the node and add it to the tree
-        Node newNode = new Node(newState, 0, node, move);
+        Node newNode = new Node(newState, node, move);
         node.children.add(newNode);
 
         return newNode;

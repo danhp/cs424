@@ -18,18 +18,11 @@ public class Node {
     public List<Node> children;
     public List<HusMove> untriedMoves;
 
-    public Node() {
-        this.gameState = new HusBoardState();
-        this.score = 0.0;
-        this.parentMove = new HusMove(0, 0);
-        this.children = new ArrayList<Node>();
-    }
-
-    public Node(HusBoardState state, int score, Node parent, HusMove parentMove) {
+    public Node(HusBoardState state, Node parent, HusMove parentMove) {
         this.numsOfVisits = 0;
-        this.gameState = state;
-        this.score = score;
+        this.score = 0;
 
+        this.gameState = state;
         this.parent = parent;
         this.parentMove = parentMove;
 

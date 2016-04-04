@@ -27,7 +27,7 @@ public class MyTools {
     }
 
     public static HusMove getBestMove(HusBoardState gameState, int player_id) {
-        return MCTS.getBestMoveMCTS(gameState, player_id);
+        return MCTS.getBestMove(gameState, player_id);
 //        return AlphaBeta.getBestMoveAlphaBeta(gameState, player_id);
     }
 
