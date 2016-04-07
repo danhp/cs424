@@ -16,7 +16,7 @@ public class AlphaBeta {
 
         // Get the legal moves for the current game state
         List<HusMove> moveList = gameState.getLegalMoves();
-        moveList = MyTools.sortMoves(moveList, gameState, maximizer);
+//        moveList = MyTools.sortMoves(moveList, gameState, maximizer);
 
         HusMove bestMove = moveList.get(0);
         int alpha = Integer.MIN_VALUE;
@@ -24,11 +24,7 @@ public class AlphaBeta {
 
         // Find the best move
         for (HusMove m : moveList) {
-            // See it played out
-            HusBoardState cloned_gameState = (HusBoardState) gameState.clone();
-            cloned_gameState.move(m);
-
-            int outcome = alphaBeta(cloned_gameState, depth, alpha, beta, false);
+            int outcome = alphaBeta(MyTools.doMove(gameState, m), depth, alpha, beta, false);
 
             if (outcome > alpha) {
                 alpha = outcome;
@@ -46,7 +42,7 @@ public class AlphaBeta {
         }
 
         // Get the legal moves for the current board state.
-        ArrayList<HusMove> moveList = gameState.getLegalMoves();
+        List<HusMove> moveList = gameState.getLegalMoves();
         int value;
 
         if (isMaximize) {
@@ -54,11 +50,7 @@ public class AlphaBeta {
 
             // Search the children
             for (HusMove m : moveList) {
-                // See it played out
-                HusBoardState cloned_gameState = (HusBoardState) gameState.clone();
-                cloned_gameState.move(m);
-
-                value = Math.max(value, alphaBeta(cloned_gameState, depth - 1, alpha, beta, !isMaximize));
+                value = Math.max(value, alphaBeta(MyTools.doMove(gameState, m), depth - 1, alpha, beta, !isMaximize));
                 alpha = Math.max(alpha, value);
 
                 // Prune
@@ -70,11 +62,7 @@ public class AlphaBeta {
 
             // Search the children
             for (HusMove m : moveList) {
-                // See it played out
-                HusBoardState cloned_gameState = (HusBoardState) gameState.clone();
-                cloned_gameState.move(m);
-
-                value = Math.min(value, alphaBeta(cloned_gameState, depth - 1, alpha, beta, !isMaximize));
+                value = Math.min(value, alphaBeta(MyTools.doMove(gameState, m), depth - 1, alpha, beta, !isMaximize));
                 beta = Math.min(beta, value);
 
                 // Prune

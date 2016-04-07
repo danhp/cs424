@@ -4,8 +4,9 @@ import hus.HusBoardState;
 import hus.HusMove;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.PriorityQueue;
 
 public class Node {
     public int numsOfVisits;
@@ -16,9 +17,9 @@ public class Node {
     public HusMove parentMove;
 
     public List<Node> children;
-    public List<HusMove> untriedMoves;
+    public PriorityQueue<HusMove> untriedMoves;
 
-    public Node(HusBoardState state, Node parent, HusMove parentMove) {
+    public Node(final HusBoardState state, Node parent, HusMove parentMove) {
         this.numsOfVisits = 0;
         this.score = 0;
 
@@ -27,6 +28,20 @@ public class Node {
         this.parentMove = parentMove;
 
         this.children = new ArrayList<Node>();
-        this.untriedMoves = state.getLegalMoves();
+
+        // Sort, so that we only expand the best subset.
+        untriedMoves = new PriorityQueue<HusMove>(13, new Comparator<HusMove>() {
+            @Override
+            public int compare(HusMove m1, HusMove m2) {
+                int score1 = MyTools.countSeeds(MyTools.doMove(gameState, m1), state.getTurnPlayer());
+                int score2 = MyTools.countSeeds(MyTools.doMove(gameState, m2), state.getTurnPlayer());
+
+                return score2 - score1;
+            }
+        });
+
+        for (HusMove m : state.getLegalMoves()) {
+            untriedMoves.add(m);
+        }
     }
 }

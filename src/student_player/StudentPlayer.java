@@ -22,6 +22,6 @@ public class StudentPlayer extends HusPlayer {
      * which your agent can use to make decisions. See the class hus.RandomHusPlayer
      * for another example agent. */
     public HusMove chooseMove(HusBoardState gameState) {
-        return MCTS.getBestMove(gameState, player_id);
+        return MyTools.getBestMove(gameState, player_id);
     }
 }

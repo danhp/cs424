@@ -14,18 +14,24 @@ public class MCTS {
     public static HusMove getBestMove(HusBoardState gameState, int player_id) {
         maximizer = player_id;
 
-        root = new Node(gameState, null, null);
-
-        double timeRemaining = 1.9e9;
         long delta = 20;
+        double timeRemaining = 1.75e9;
+        long startTime = System.nanoTime();
 
-        // Start the root so that there is at least one child
-        expand(root);
+        if (gameState.getTurnNumber() == 0) {
+            timeRemaining = 28e9;
+            root = new Node(gameState, null, null);
+        } else {
+            // Attempt to save the root.
+            root = moveRoot(root, gameState);
 
-        while (delta * 4 < timeRemaining) {
-            long startTime = System.nanoTime();
+            delta = System.nanoTime() - startTime;
+            timeRemaining -= delta;
+        }
 
-            // Do the work
+        while (delta * 5 < timeRemaining) {
+            startTime = System.nanoTime();
+
             Node toSimulateFrom = treePolicy(root);
             int score = defaultPolicy(toSimulateFrom.gameState);
             backup(toSimulateFrom, score);
@@ -34,15 +40,21 @@ public class MCTS {
             timeRemaining -= delta;
         }
 
-        return bestChild(root, 0).parentMove;
+        Node bestChild = bestChild(root, 0);
+        HusMove bestMove = bestChild.parentMove;
+        root = bestChild;
+        root.parent = null;
+        root.parentMove = null;
+        return bestMove;
     }
 
     private static Node treePolicy(Node node) {
-        while (node.children.size() > 0) {
-            if (node.children.size() < node.gameState.getLegalMoves().size()) {
+        while (!node.gameState.gameOver()) {
+            if (node.untriedMoves.peek() != null) {
                 return expand(node);
             } else {
-                node = bestChild(node, 1 / Math.sqrt(2));
+                // Exploration constant ~= 1 / root(2)
+                node = bestChild(node, 0.707);
             }
         }
 
@@ -51,15 +63,10 @@ public class MCTS {
 
     private static Node expand(Node node) {
         // Get an untried move.
-        HusMove move = node.untriedMoves.get(0);
-        node.untriedMoves.remove(0);
-
-        // Create the new child state
-        HusBoardState newState = (HusBoardState) node.gameState.clone();
-        newState.move(move);
+        HusMove move = node.untriedMoves.poll();
 
         // Create the node and add it to the tree
-        Node newNode = new Node(newState, node, move);
+        Node newNode = new Node(MyTools.doMove(node.gameState, move), node, move);
         node.children.add(newNode);
 
         return newNode;
@@ -119,5 +126,15 @@ public class MCTS {
             delta = -delta;
             node = node.parent;
         }
+    }
+
+    private static Node moveRoot(Node root, HusBoardState gameState) {
+        for (Node n : root.children)  {
+            if (MyTools.stateEquals(n.gameState, gameState)) {
+                return n;
+            }
+        }
+
+        return new Node(gameState, null, null);
     }
 }

@@ -1,34 +1,20 @@
 package student_player.mytools;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import hus.HusBoardState;
 import hus.HusMove;
 
 public class MyTools {
-    public static HusMove getOpener(HusBoardState gameState, int player_id, int oppnonent_id) {
-        // Get the legal moves for the current board state.
-        ArrayList<HusMove> moves = gameState.getLegalMoves();
-        HusMove move = moves.get(0);
-
-        return move;
-    }
-
-    // Try to determine the opener with the given state.
-    public static HusMove getCounter(HusBoardState gameState, int player_id, int opponent_id) {
-        // Get the legal moves for the current board state.
-        ArrayList<HusMove> moves = gameState.getLegalMoves();
-        HusMove move = moves.get(0);
-
-        return move;
-    }
-
     public static HusMove getBestMove(HusBoardState gameState, int player_id) {
         return MCTS.getBestMove(gameState, player_id);
 //        return AlphaBeta.getBestMoveAlphaBeta(gameState, player_id);
+    }
+
+    public static HusBoardState doMove(HusBoardState gameState, HusMove move) {
+        HusBoardState cloned = (HusBoardState) gameState.clone();
+        cloned.move(move);
+        return cloned;
     }
 
     public static int countSeeds(HusBoardState gameState, int player_id) {
@@ -54,10 +40,14 @@ public class MyTools {
                 s2.move(m2);
                 int score2 = countSeeds(s2, player_id);
 
-                return (score1 < score2) ? 1 : (score1 == score2 ) ? 0 : -1;
+                return score2 - score1;
             }
         });
 
         return moveList;
+    }
+
+    public static boolean stateEquals(HusBoardState state1, HusBoardState state2) {
+        return Arrays.deepEquals(state1.getPits(), state2.getPits());
     }
 }
