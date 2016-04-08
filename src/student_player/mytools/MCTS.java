@@ -15,7 +15,7 @@ public class MCTS {
         maximizer = player_id;
 
         long delta = 20;
-        double timeRemaining = 1.75e9;
+        double timeRemaining = 1.85e9;
         long startTime = System.nanoTime();
 
         if (gameState.getTurnNumber() == 0) {
@@ -29,7 +29,7 @@ public class MCTS {
             timeRemaining -= delta;
         }
 
-        while (delta * 5 < timeRemaining) {
+        while (delta * 4 < timeRemaining) {
             startTime = System.nanoTime();
 
             Node toSimulateFrom = treePolicy(root);

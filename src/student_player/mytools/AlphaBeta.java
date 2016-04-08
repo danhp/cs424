@@ -16,7 +16,7 @@ public class AlphaBeta {
 
         // Get the legal moves for the current game state
         List<HusMove> moveList = gameState.getLegalMoves();
-//        moveList = MyTools.sortMoves(moveList, gameState, maximizer);
+        moveList = MyTools.sortMoves(moveList, gameState, maximizer);
 
         HusMove bestMove = moveList.get(0);
         int alpha = Integer.MIN_VALUE;

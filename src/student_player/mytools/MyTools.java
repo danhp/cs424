@@ -32,13 +32,8 @@ public class MyTools {
         Collections.sort(moveList, new Comparator<HusMove>() {
             @Override
             public int compare(HusMove m1, HusMove m2) {
-                HusBoardState s1 = (HusBoardState) gameState.clone();
-                s1.move(m1);
-                int score1 = countSeeds(s1, player_id);
-
-                HusBoardState s2 = (HusBoardState) gameState.clone();
-                s2.move(m2);
-                int score2 = countSeeds(s2, player_id);
+                int score1 = countSeeds(doMove(gameState, m1), player_id);
+                int score2 = countSeeds(doMove(gameState, m2), player_id);
 
                 return score2 - score1;
             }
